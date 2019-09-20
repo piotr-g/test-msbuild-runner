@@ -1,0 +1,23 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <OutputZipFile>project.zip</OutputZipFile>
+    <OutputUnzipDir>unzipped</OutputUnzipDir>
+  </PropertyGroup>
+
+  <Target Name="Zip">
+    <ItemGroup>
+      <FilesToZip Include="project.proj*" />
+    </ItemGroup>
+    <Exec Command="dir" />
+    <Microsoft.Build.Tasks.Message Text="##teamcity[progressMessage 'Archiving files to $(OutputZipFile) file...']"/>
+    <Exec Command="PowerShell -command Compress-Archive @(FilesToZip, ',') $(OutputZipFile) -Force" />
+  </Target>
+  <Target Name="Unzip">
+    <Microsoft.Build.Tasks.Message Text="##teamcity[progressMessage 'Unzipping files to $(OutputUnzipDir) folder...']"/>
+    <Exec Command="PowerShell -command Expand-Archive $(OutputZipFile) -DestinationPath $(OutputUnzipDir) -Force" />
+  </Target>
+  <Target Name="Verify">
+    <Microsoft.Build.Tasks.Message Text="##teamcity[progressMessage 'Verifying files in $(OutputUnzipDir) folder...']"/>
+    <!-- skipped -->
+  </Target>
+</Project>
